@@ -1,0 +1,30 @@
+version: '2'
+services:
+  db:
+    image: mariadb
+    container_name: mydb
+    ports:
+      - 3310:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+        - ./db-raw:/var/lib/mysql
+    restart: on-failure
+  php:
+    image: omccc/my-php-image
+    container_name: myphp
+    ports:
+      - 9000:80
+      - 443:443
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: myadmin
+    ports:
+      - 8000:80
+    depends_on:
+      - db
